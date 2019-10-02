@@ -1,0 +1,56 @@
+-----------------------------------------------------   DB Creations -------------------------------------------------------------------------
+
+show dbs
+use Hospitals
+db.Patient.find().pretty()
+
+-----------------------------------------------------   Insert QUery -------------------------------------------------------------------------
+db.Patient.insertMany([{"patientname" : "Jigs Sharma", "patientage" : "33", "patientdisease" : "Dengue", "historydetail": "17-04-2019"},
+                       {"PatientName" : "Joy Patel", "PatientAge": "35", "PatientDisease": "Dengue", "historydetail": "22-10-2019"}])
+
+-----------------------------------------------------   Remove QUery -------------------------------------------------------------------------
+db.Patient.remove({"patientname" : "Parth Patel", "patientage" : "23", "patientdisease" : "Jaundice"})
+
+-----------------------------------------------------   InsertOne QUery -------------------------------------------------------------------------
+
+db.Patient.insertOne({"patientname" : "Vraj Sharma", "patientage" : "25", "patientdisease" : "Jaundice"})
+
+-----------------------------------------------------   UpdateOne and deleteOne QUery -------------------------------------------------------------------------
+db.Patient.updateOne({"patientname" : "Rahul Pareek"}, {$set : {"patientage": "95", "patientdisease": "Fracture", "historydetail": "28-09-2022"}})
+db.Patient.deleteOne({"patientdisease" : {$eq: "Cold and Cough" }})
+
+
+-----------------------------------------------------   Find and FindOne QUery -------------------------------------------------------------------------
+db.Patient.findOne({"patientage" : {$lt : "30"}})
+db.Patient.find({"patientage" : {$lt : "30"}})
+
+-----------------------------------------------------   Schema validations -------------------------------------------------------------------------
+ 
+db.createCollection("Patient", {
+   validator: {
+      $jsonSchema: {
+         bsonType: "object",
+         required: [ "patientname", "patientdisease", "patientage", "historydetail"],
+         properties: {
+            patientname: {
+               bsonType: "string",
+               description: "must be a string and is required field."
+            },
+            patientage: {
+               bsonType: "int",
+               minimum: 1,
+               maximum: 100,
+               description: "must be an integer in [ 1, 100 ] and is required field."
+            },
+            patientdisease: {
+               bsonType: [ "string" ],
+               description: "must be a string if the field exists."
+            },
+            historydetail: {
+               bsonType: "date",  
+               description: "must be a date and is required field."          
+            }
+         }
+      }
+   }
+})
